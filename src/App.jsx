@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Form from './components/Form'
-import useSelectCurrency from './hooks/useSelectCurrency'
 
 import styled from '@emotion/styled'
 import imageCrypto from './img/imagen-criptos.png'
@@ -40,26 +39,20 @@ const Heading = styled.h1`
     display: block;
     margin: 10px auto 0 auto;
 
-  }
-  
+  }  
 `
 
 function App() {
-  
-  const [ SelectCurrency ] = useSelectCurrency()
-
   return (
     <Container>
-        <Image 
-          src={imageCrypto}
-          alt='image cryptocurrency'
-        />
-        <div>
-          <Heading>Cryptocurrency Trading</Heading>
-          <Form />
-        </div>
-      
-      
+      <Image 
+        src={imageCrypto}
+        alt='image cryptocurrency'
+      />
+      <div>
+        <Heading>Cryptocurrency Trading</Heading>        
+        <Form />
+      </div>     
     </Container>  
   )
 }
