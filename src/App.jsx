@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Form from './components/Form'
+import Result from './components/Result'
 
 import styled from '@emotion/styled'
 import imageCrypto from './img/imagen-criptos.png'
@@ -43,6 +44,28 @@ const Heading = styled.h1`
 `
 
 function App() {
+  const [coinsCalculate, setCoinsCalculate] = useState({})
+  const [resultCalculate, setResultCalculate] = useState({})
+  const [load, setLoad] = useState(false)
+
+  useEffect(() => {
+    if(Object.keys(coinsCalculate).length > 0){      
+
+      const calculateCrypto = async () => {
+        const { coin, cryptoCoin } = coinsCalculate
+        const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cryptoCoin}&tsyms=${coin}`
+        
+        const response = await fetch(url)      
+        const result = await response.json()  
+        
+        setResultCalculate(result.DISPLAY[cryptoCoin][coin])
+      }
+
+      calculateCrypto()    
+
+    }
+  }, [coinsCalculate])
+
   return (
     <Container>
       <Image 
@@ -50,8 +73,15 @@ function App() {
         alt='image cryptocurrency'
       />
       <div>
-        <Heading>Cryptocurrency Trading</Heading>        
-        <Form />
+        <Heading>Cryptocurrency Calculator</Heading>        
+        <Form 
+          setCoinsCalculate={setCoinsCalculate}
+        />        
+
+
+        {load ?? <p>loading...</p>}
+        {resultCalculate.PRICE && <Result resultCalculate={resultCalculate} />}
+        
       </div>     
     </Container>  
   )

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { coins } from '../data/coins'
+import Error from './Error'
+
 import styled from '@emotion/styled'
 import useSelectCurrency from '../hooks/useSelectCurrency'
-import { coins } from '../data/coins'
 
 const InputSubmit = styled.input`
   background-color: blue;
@@ -21,10 +23,10 @@ const InputSubmit = styled.input`
     background-color: #7a7dfe;
   }
 `
-
-const Form = () => { 
+const Form = ({setCoinsCalculate}) => { 
   
   const [cryptos, setCryptos] = useState([])
+  const [error, setError] = useState(false)
 
   const [ coin, SelectCurrency ] = useSelectCurrency('Select Currency', coins)
   const [ cryptoCoin, SelectCryptoCurrency ] = useSelectCurrency('Select Cryptocurrency', cryptos)
@@ -55,20 +57,35 @@ const Form = () => {
   const handleSubmit = e => {
     e.preventDefault()
 
-    console.log('Send Form')
+    if([coin, cryptoCoin].includes('')){
+
+      setError(true)
+      return
+    }
+
+    setError(false)
+    setCoinsCalculate({
+      coin,
+      cryptoCoin
+    })
   }
   
-  return (          
-    <form
-      onSubmit={handleSubmit}
-    >
-      <SelectCurrency />
-      <SelectCryptoCurrency />
-      <InputSubmit 
-        type='submit' 
-        value='trading' 
-      />
-    </form>    
+  return (    
+    <>
+      {error && <Error>Please select currencies and cryptocurrencies</Error>}      
+      
+      <form
+        onSubmit={handleSubmit}
+      >
+        <SelectCurrency />
+        <SelectCryptoCurrency />
+        <InputSubmit 
+          type='submit' 
+          value='Calculate' 
+        />
+      </form> 
+    </>
+       
   )
 }
 
